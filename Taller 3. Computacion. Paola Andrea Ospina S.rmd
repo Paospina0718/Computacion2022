@@ -1,0 +1,590 @@
+---
+title: "Taller 3- Computación y estadística"
+author: "Paola Andrea Ospina Sanchez"
+date: "19/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr) 
+library(readxl)
+library(ggplot2)
+library(Hmisc) 
+library(readxl)
+```
+
+```{r}
+XPABLO <- read_excel("~/Paola/Computacion/XPABLO.xlsx")
+View(XPABLO)
+```
+
+## Asignación 
+
+Mapear (con coordenadas) el resto de variables, no necesariamente con 4 grupos
+
+# Variables individuales
+```{r}
+Ca = XPABLO$Ca
+Ca = cut(x = Ca, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = Ca))+
+  geom_point()
+```
+```{r}
+Mg = XPABLO$Mg
+Mg = cut(x = Mg, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = K))+
+  geom_point()
+```
+
+
+```{r}
+K = XPABLO$K
+K = cut(x = K, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = K))+
+  geom_point()
+```
+```{r}
+Na = XPABLO$Na
+Na = cut(x = Na, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = Na))+
+  geom_point()
+```
+```{r}
+CICE = XPABLO$CICE
+CICE = cut(x = CICE, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = CICE))+
+  geom_point()
+```
+```{r}
+CE = XPABLO$CE
+CE = cut(x = CE, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = CE))+
+  geom_point()
+```
+```{r}
+Fe = XPABLO$Fe
+Fe = cut(x = Fe, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = Fe))+
+  geom_point()
+```
+```{r}
+Cu = XPABLO$Cu
+Cu = cut(x = Cu, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = Cu))+
+  geom_point()
+```
+```{r}
+Zn = XPABLO$Zn
+Zn = cut(x = Zn, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = Zn))+
+  geom_point()
+```
+```{r}
+cos = XPABLO$cos
+cos = cut(x = cos, breaks = 5)
+ggplot(XPABLO, aes(Long, Lat, color = cos))+
+  geom_point()
+```
+# Variables agrupadas
+
+```{r}
+Mg_K = XPABLO$Mg/XPABLO$K
+Mg_K = cut(x = Mg_K, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Mg_K))+
+  geom_point()
+```
+```{r}
+Mg_Na = XPABLO$Mg/XPABLO$Na
+Mg_Na = cut(x = Mg_Na, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Mg_Na))+
+  geom_point()
+```
+```{r}
+Mg_CICE = XPABLO$Mg/XPABLO$CICE
+Mg_CICE = cut(x = Mg_CICE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Mg_CICE))+
+  geom_point()
+```
+```{r}
+Mg_CE = XPABLO$Mg/XPABLO$CE
+Mg_CE = cut(x = Mg_CE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Mg_CE))+
+  geom_point()
+```
+```{r}
+Mg_Fe = XPABLO$Mg/XPABLO$Fe
+Mg_Fe = cut(x = Mg_Fe, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Mg_Fe))+
+  geom_point()
+```
+```{r}
+Mg_Cu = XPABLO$Mg/XPABLO$Cu
+Mg_Cu = cut(x = Mg_Cu, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Mg_Cu))+
+  geom_point()
+```
+```{r}
+Mg_Zn = XPABLO$Mg/XPABLO$Zn
+Mg_Zn = cut(x = Mg_Zn, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Mg_Zn))+
+  geom_point()
+```
+
+```{r}
+Mg_cos = XPABLO$Mg/XPABLO$cos
+Mg_cos = cut(x = Mg_cos, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Mg_cos))+
+  geom_point()
+```
+
+```{r}
+K_Na = XPABLO$K/XPABLO$Na
+K_Na = cut(x = K_Na, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_Na))+
+  geom_point()
+```
+```{r}
+K_Mg = XPABLO$K/XPABLO$Mg
+K_Mg = cut(x = K_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_Mg))+
+  geom_point()
+```
+```{r}
+K_CICE = XPABLO$K/XPABLO$CICE
+K_CICE = cut(x = K_CICE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_CICE))+
+  geom_point()
+```
+
+```{r}
+K_CE = XPABLO$K/XPABLO$CE
+K_CE = cut(x = K_CE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_CE))+
+  geom_point()
+```
+
+```{r}
+K_Fe = XPABLO$K/XPABLO$Fe
+K_Fe = cut(x = K_Fe, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_Fe))+
+  geom_point()
+```
+
+```{r}
+K_Cu = XPABLO$K/XPABLO$Cu
+K_Cu = cut(x = K_Cu, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_Cu))+
+  geom_point()
+```
+
+```{r}
+K_Zn = XPABLO$K/XPABLO$Zn
+K_Zn = cut(x = K_Zn, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_Zn))+
+  geom_point()
+```
+
+```{r}
+K_cos = XPABLO$K/XPABLO$cos
+K_cos = cut(x = K_cos, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_cos))+
+  geom_point()
+```
+
+```{r}
+Na_Mg = XPABLO$Na/XPABLO$Mg
+Na_Mg = cut(x = Na_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Na_Mg))+
+  geom_point()
+```
+
+```{r}
+Na_K = XPABLO$Na/XPABLO$K
+Na_K = cut(x = Na_K, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Na_K))+
+  geom_point()
+```
+
+```{r}
+Na_CICE = XPABLO$Na/XPABLO$CICE
+Na_CICE = cut(x = Na_CICE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Na_CICE))+
+  geom_point()
+```
+
+```{r}
+Na_CE = XPABLO$Na/XPABLO$CE
+Na_CE = cut(x = Na_CE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Na_CE))+
+  geom_point()
+```
+
+```{r}
+Na_Fe= XPABLO$Na/XPABLO$Fe
+Na_Fe = cut(x = Na_Fe, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Na_Fe))+
+  geom_point()
+```
+
+```{r}
+Na_Cu = XPABLO$Na/XPABLO$Cu
+Na_Cu = cut(x = Na_Cu, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Na_Cu))+
+  geom_point()
+```
+
+```{r}
+Na_Zn = XPABLO$Na/XPABLO$Zn
+Na_Zn = cut(x = Na_Zn, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Na_Zn))+
+  geom_point()
+```
+
+```{r}
+Na_cos = XPABLO$Na/XPABLO$cos
+Na_cos = cut(x = Na_cos, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Na_cos))+
+  geom_point()
+```
+```{r}
+CICE_Mg = XPABLO$CICE/XPABLO$Mg
+CICE_Mg = cut(x = CICE_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CICE_Mg))+
+  geom_point()
+```
+
+```{r}
+CICE_K = XPABLO$CICE/XPABLO$K
+CICE_K = cut(x = CICE_K, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CICE_K))+
+  geom_point()
+```
+
+```{r}
+CICE_Na = XPABLO$CICE/XPABLO$Na
+CICE_Na = cut(x = CICE_Na, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CICE_Na))+
+  geom_point()
+```
+
+```{r}
+CICE_CE = XPABLO$CICE/XPABLO$CE
+CICE_CE = cut(x = CICE_CE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CICE_CE))+
+  geom_point()
+```
+
+```{r}
+CICE_Fe = XPABLO$CICE/XPABLO$Fe
+CICE_Fe = cut(x = CICE_Fe, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CICE_Fe))+
+  geom_point()
+```
+
+```{r}
+CICE_Cu = XPABLO$CICE/XPABLO$Cu
+CICE_Cu = cut(x = CICE_Cu, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CICE_Cu))+
+  geom_point()
+```
+
+```{r}
+CICE_Zn = XPABLO$CICE/XPABLO$Zn
+CICE_Zn = cut(x = CICE_Zn, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CICE_Zn))+
+  geom_point()
+```
+
+```{r}
+CICE_cos = XPABLO$CICE/XPABLO$cos
+CICE_cos = cut(x = CICE_cos, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CICE_cos))+
+  geom_point()
+```
+
+```{r}
+CE_Mg = XPABLO$CE/XPABLO$Mg
+CE_Mg = cut(x = CE_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CE_Mg))+
+  geom_point()
+```
+```{r}
+CE_K = XPABLO$CE/XPABLO$K
+CE_K = cut(x = CE_K, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CE_K))+
+  geom_point()
+```
+```{r}
+CE_Na = XPABLO$CE/XPABLO$Na
+CE_Na = cut(x = CE_Na, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CE_Na))+
+  geom_point()
+```
+
+```{r}
+CE_CICE = XPABLO$CE/XPABLO$CICE
+CE_CICE = cut(x = CE_CICE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CE_CICE))+
+  geom_point()
+```
+
+```{r}
+CE_Fe = XPABLO$CE/XPABLO$Fe
+CE_Fe = cut(x = CE_Fe, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CE_Fe))+
+  geom_point()
+```
+
+```{r}
+CE_Cu = XPABLO$CE/XPABLO$Cu
+CE_Cu = cut(x = CE_Cu, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CE_Cu))+
+  geom_point()
+```
+
+```{r}
+CE_Zn = XPABLO$CE/XPABLO$Zn
+CE_Zn = cut(x = CE_Zn, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CE_Zn))+
+  geom_point()
+```
+
+```{r}
+CE_cos = XPABLO$CE/XPABLO$cos
+CE_cos = cut(x = CE_cos, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = CE_cos))+
+  geom_point()
+```
+
+```{r}
+Fe_Mg = XPABLO$Fe/XPABLO$Mg
+Fe_Mg = cut(x = Fe_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Fe_Mg))+
+  geom_point()
+```
+
+```{r}
+Fe_K = XPABLO$Fe/XPABLO$K
+Fe_K = cut(x = Fe_K, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = K_Mg))+
+  geom_point()
+```
+
+```{r}
+Fe_Na = XPABLO$Fe/XPABLO$Na
+Fe_Na = cut(x = Fe_Na, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Fe_Na))+
+  geom_point()
+```
+
+```{r}
+Fe_Mg = XPABLO$Fe/XPABLO$Mg
+Fe_Mg = cut(x = Fe_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Fe_Mg))+
+  geom_point()
+```
+
+```{r}
+Fe_CICE = XPABLO$Fe/XPABLO$CICE
+Fe_CICE = cut(x = Fe_CICE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Fe_CICE))+
+  geom_point()
+```
+
+```{r}
+Fe_CE = XPABLO$Fe/XPABLO$CE
+Fe_CE = cut(x = Fe_CE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Fe_CE))+
+  geom_point()
+```
+
+```{r}
+Fe_Cu = XPABLO$Fe/XPABLO$Cu
+Fe_Cu = cut(x = Fe_Cu, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Fe_Cu))+
+  geom_point()
+```
+
+```{r}
+Fe_Zn = XPABLO$Fe/XPABLO$Zn
+Fe_Zn = cut(x = Fe_Zn, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Fe_Zn))+
+  geom_point()
+```
+
+```{r}
+Fe_cos = XPABLO$Fe/XPABLO$cos
+Fe_cos= cut(x = Fe_cos, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Fe_cos))+
+  geom_point()
+```
+
+```{r}
+Cu_Mg = XPABLO$Cu/XPABLO$Mg
+Cu_Mg = cut(x = Cu_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Cu_Mg))+
+  geom_point()
+```
+
+```{r}
+Cu_K = XPABLO$Cu/XPABLO$K
+Cu_K = cut(x = Cu_K, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Cu_K))+
+  geom_point()
+```
+
+```{r}
+Cu_Na = XPABLO$Cu/XPABLO$Na
+Cu_Na = cut(x = Cu_Na, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Cu_Na))+
+  geom_point()
+```
+
+```{r}
+Cu_CICE = XPABLO$Cu/XPABLO$CICE
+Cu_CICE = cut(x = Cu_CICE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Cu_CICE))+
+  geom_point()
+```
+
+```{r}
+Cu_CE = XPABLO$Cu/XPABLO$CE
+Cu_CE = cut(x = Cu_CE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Cu_CE))+
+  geom_point()
+```
+
+```{r}
+Cu_Fe = XPABLO$Cu/XPABLO$Fe
+Cu_Fe = cut(x = Cu_Fe, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Cu_Fe))+
+  geom_point()
+```
+
+```{r}
+Cu_Zn = XPABLO$Cu/XPABLO$Zn
+Cu_Zn = cut(x = Cu_Zn, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Cu_Zn))+
+  geom_point()
+```
+
+```{r}
+Cu_cos = XPABLO$Cu/XPABLO$cos
+Cu_cos= cut(x = Cu_cos, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Cu_cos))+
+  geom_point()
+```
+
+```{r}
+Zn_Mg = XPABLO$Zn/XPABLO$Mg
+Zn_Mg = cut(x = Zn_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Zn_Mg))+
+  geom_point()
+```
+
+```{r}
+Zn_K = XPABLO$Zn/XPABLO$K
+Zn_K = cut(x = Zn_K, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Zn_K))+
+  geom_point()
+```
+
+```{r}
+Zn_Na = XPABLO$Zn/XPABLO$Na
+Zn_Na = cut(x = Zn_Na, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Zn_Na))+
+  geom_point()
+```
+
+```{r}
+Zn_CICE = XPABLO$Zn/XPABLO$CICE
+Zn_CICE = cut(x = Zn_CICE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Zn_CICE))+
+  geom_point()
+```
+
+```{r}
+Zn_CE = XPABLO$Zn/XPABLO$CE
+Zn_CE = cut(x = Zn_CE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Zn_CE))+
+  geom_point()
+```
+
+```{r}
+Zn_Fe = XPABLO$Zn/XPABLO$Fe
+Zn_Fe = cut(x = Zn_Fe, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Zn_Fe))+
+  geom_point()
+```
+
+```{r}
+Zn_Cu = XPABLO$Zn/XPABLO$Cu
+Zn_Cu = cut(x = Zn_Cu, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Zn_Cu))+
+  geom_point()
+```
+
+```{r}
+Zn_cos = XPABLO$Zn/XPABLO$cos
+Zn_cos = cut(x = Zn_cos, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = Zn_cos))+
+  geom_point()
+```
+
+```{r}
+cos_Mg = XPABLO$cos/XPABLO$Mg
+cos_Mg = cut(x = cos_Mg, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = cos_Mg))+
+  geom_point()
+```
+
+```{r}
+cos_K = XPABLO$cos/XPABLO$K
+cos_K = cut(x = cos_K, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = cos_K))+
+  geom_point()
+```
+
+```{r}
+cos_Na = XPABLO$cos/XPABLO$Na
+cos_Na = cut(x = cos_Na, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = cos_Na))+
+  geom_point()
+```
+
+```{r}
+cos_CICE = XPABLO$cos/XPABLO$CICE
+cos_CICE = cut(x = cos_CICE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = cos_CICE))+
+  geom_point()
+```
+
+```{r}
+cos_CE = XPABLO$cos/XPABLO$CE
+cos_CE = cut(x = cos_CE, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = cos_CE))+
+  geom_point()
+```
+
+```{r}
+cos_Fe = XPABLO$cos/XPABLO$Fe
+cos_Fe = cut(x = cos_Fe, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = cos_Fe))+
+  geom_point()
+```
+
+```{r}
+cos_Cu = XPABLO$cos/XPABLO$Cu
+cos_Cu = cut(x = cos_Cu, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = cos_Cu))+
+  geom_point()
+```
+
+```{r}
+cos_Zn = XPABLO$cos/XPABLO$Zn
+cos_Zn = cut(x = cos_Zn, breaks = 3)
+ggplot(XPABLO, aes(Long, Lat, color = cos_Zn))+
+  geom_point()
+```
+
