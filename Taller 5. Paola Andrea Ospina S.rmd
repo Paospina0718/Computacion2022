@@ -1,0 +1,83 @@
+---
+title: "Taller 4. Computacion-Paola Andrea Ospina S"
+author: "Paola Andrea Ospina Sanchez"
+date: "2/4/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ape)
+library(dplyr) 
+library(tinytex)
+library(ggplot2)
+library(Hmisc) 
+library(readxl)
+library(ape)
+```
+
+```{r}
+XPABLO <- read_excel("~/Paola/Computacion/XPABLO.xlsx")
+View(XPABLO)
+```
+
+# Asignación
+
+-Hallar el indice de Moran para las variables del archivo XPABLO
+
+##Matriz de distancia
+
+```{r}
+dist_matrix_pablo <- as.matrix(dist(cbind(XPABLO$Long,XPABLO$Lat)))#;dist_matrix
+which.max(dist_matrix_pablo) 
+max(dist_matrix_pablo) # Mayor valor 
+min(dist_matrix_pablo) # Menor valor
+dim(XPABLO)
+```
+##Inversa de la distancia
+
+```{r}
+dist_matrix_inv_pablo <- 1 / dist_matrix_pablo # Element wise
+diag(dist_matrix_inv_pablo) <- 0
+```
+
+-Variable MO
+```{r}
+Moran.I(XPABLO$MO, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable Ca
+```{r}
+Moran.I(XPABLO$Ca, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable Mg
+```{r}
+Moran.I(XPABLO$Mg, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable K
+```{r}
+Moran.I(XPABLO$K, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable Na
+```{r}
+Moran.I(XPABLO$Na, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable CICE
+```{r}
+Moran.I(XPABLO$CICE, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable CE
+```{r}
+Moran.I(XPABLO$CE, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable Fe
+```{r}
+Moran.I(XPABLO$Fe, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable Cu
+```{r}
+Moran.I(XPABLO$Cu, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
+-Variable Zn
+```{r}
+Moran.I(XPABLO$Zn, dist_matrix_inv_pablo) # p.value < 0.05 <- Dependencia espacial
+```
