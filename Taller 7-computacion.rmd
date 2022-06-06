@@ -1,0 +1,87 @@
+---
+title: "Taller 7-computacion"
+author: "Paola Andrea Ospina Sanchez"
+date: "5/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(faux)
+dfa <- rnorm_multi(n = 1000,
+            mu = c(67, 30, 30, 320),
+            sd = c(2, 3, 5, 10),
+            varnames = c('Edad', 'dap', 'rto', 'clolA'),
+            r = c(0.4, 0.6, 0.5, 0.6, 0.7, 0.8))
+dfa
+
+dfa$hibrido <- factor(round(runif(n = 1000, min = 0,max = 1.2)))
+
+w <- 0.5 * dfa$clolA - 0.01 * dfa$dap - 0.6 * dfa$rto - 0.02 * dfa$Edad
+
+dfa$abortos <- factor(ifelse(w > 140, 'Si_aborto', 'No aborto'))
+```
+
+```{r}
+df1<-data.frame(dfa$Edad,
+                dfa$dap,
+                dfa$rto,
+                dfa$clolA,
+                dfa$hibrido,
+                dfa$abortos)
+df1
+```
+```{r}
+as.factor(dfa$abortos)
+
+```
+```{r}
+class(dfa$Edad)
+class(dfa$dap)
+class(dfa$abortos)
+```
+
+
+## Análisis univariado
+
+```{r}
+univariable_edad <- glm(dfa.abortos ~ dfa.Edad, family = binomial,data=df1)
+summary(univariable_edad)
+```
+
+```{r}
+model1<- glm(dfa.abortos ~ dfa.Edad+dfa.dap+dfa.rto+dfa.clolA+dfa.hibrido, family = binomial, data = df1)
+summary(model1)
+```
+
+```{r}
+model2 <- glm(dfa.abortos ~ dfa.Edad+dfa.dap+dfa.rto+dfa.clolA, family = binomial, data = df1)
+summary(model2)
+```
+
+```{r}
+delta.coef<-abs((coef(model2)-coef(model1)[-4])/
+coef(model1)[-4])
+round(delta.coef,3)
+```
+```{r}
+library(lmtest)
+lrtest(model1,model2)
+
+Model1: dfa.abortos ~ dfa.Edad+dfa.dap+dfa.rto+dfa.clolA+dfa.hibrido
+Model2: dfa.abortos ~ dfa.Edad+dfa.dap+dfa.rto+dfa.clolA
+```
+```{r}
+anova(model1,model2,test="Chisq")
+```
+```{r}
+par(mfrow = c(2,3))
+scatter.smooth(dfa$Edad, log(pr/(1-pr)), cex = 0.5) 
+scatter.smooth(dfa$dap, log(pr/(1-pr)), cex = 0.5)
+scatter.smooth(dfa$clolA, log(pr/(1-pr)), cex = 0.5)
+```
+
+
