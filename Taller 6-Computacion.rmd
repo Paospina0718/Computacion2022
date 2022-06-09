@@ -1,0 +1,133 @@
+---
+title: "Taller 7- Computacion"
+author: "Paola Andrea Ospina Sanchez"
+date: "5/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readxl)
+library(plotly)
+library(factoextra)
+library(dplyr)
+library(psych)
+library(farver)
+```
+
+* Correr el mismo código de clase, para Chroma y Hue
+
+* Caracterizar los Cluster
+
+* Utilizar algún gráfico que muestre el número de cluster
+
+* Pasar de coordenadas Lab a RGB (Investigar) y hacer los cluster con las coordanadas RGB
+
+* Existe alguna relación del Chroma y Hue para coordenadas RGB, si es cierto, entonces realiza los cluster con RGB
+
+* Pueden colocar otro tipo de coordenadas (ej. HLS, HVS)
+
+```{r}
+dfcie <- read_excel("~/Paola/Computacion/Cielab_tueste_cafe.xlsx")
+dfcie
+```
+```{r}
+Chroma <- sqrt(dfcie$a^2+dfcie$b^2)
+hue <- atan(dfcie$b/dfcie$a)
+CH <- matrix(c(Chroma,hue),
+              ncol=2)
+```
+
+```{r}
+## Hallar el número de clusters
+NC = CH
+NC1 = scale(NC)
+NC = dfcie[ ,-1]
+NC2 = NC [ ,-1]
+NC3 = NC2 [ ,-1]
+NC4 = NC3 [ ,-1]
+NC1 = scale(NC4)
+fviz_nbclust(NC1,
+             FUNcluster = kmeans,
+             method = 'gap_stat',
+             diss = get_dist(NC1,
+                             'euclidean'))
+
+
+```
+```{r}
+cl1 = kmeans(NC1, 3)
+NC4$cluster <- cl1$cluster
+NC4 |>
+  group_by(cluster) |>
+  summarise(mchroma = mean(Chroma),
+            mhue = mean(hue),
+            sdchroma = sd(Chroma),
+            sdhue = sd(hue),
+            CVchroma = 100 * sdchroma/mchroma,
+            CVhue = 100 *sdchroma/mhue,)
+```
+
+```{r}
+df <- scale(NC4)
+dst <- dist(df, method = "euclidean") 
+fit <- hclust(dst, method="ward.D2")
+plot(fit)
+groups <- cutree(fit, k=3)  
+rect.hclust(fit, k=3, border="purple")
+```
+```{r}
+tapply(NC4$CHROMA, groups, mean)
+tapply(NC4$HUE, groups, mean)
+```
+```{r}
+#Conversion de Lab A RGB
+dfc1 <- dfcie [ ,-4]
+dfc2 <- dfc1 [ ,-4]
+dfc3 <- dfc2 [ ,-4]
+dfRGB<- convert_colour(dfc3,'lab','rgb')
+dfRGB
+```
+
+```{r}
+## Cluster de RGB
+NCRGB = scale(dfRGB)
+fviz_nbclust(NCRGB,
+             FUNcluster = kmeans,
+             method = 'gap_stat',
+             diss = get_dist(NCRGB,
+                             'euclidean'))
+```
+
+```{r}
+#Teniendo en cuenta el grafico, RGB tiene 3 cluster 
+cl1 = kmeans(NCRGB, 3)
+dfRGB$cluster <- cl1$cluster
+dfRGB |>
+  group_by(cluster) |>
+  summarise(mr = mean(r),
+            mg = mean(g),
+            mb = mean(b),
+            sdr = sd(r),
+            sdg = sd(g),
+            sdb = sd(b),
+            CVr = 100 * sdr/mr,
+            CVg = 100 *sdg/mg,
+            CVb = 100 *sdb/mb)
+```
+
+```{r}
+df1 <- scale(dfRGB)
+dst <- dist(df1, method = "euclidean") 
+fit <- hclust(dst, method="ward.D2")
+plot(fit)
+groups <- cutree(fit, k=3)  
+rect.hclust(fit, k=3, border="orange")
+```
+```{r}
+tapply(dfRGB$r, groups, mean)
+tapply(dfRGB$g, groups, mean)
+tapply(dfRGB$b, groups, mean)
+```
+
+
