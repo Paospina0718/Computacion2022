@@ -1,0 +1,152 @@
+---
+title: "Articulo 2"
+author: "Paola Andrea Ospina Sanchez"
+date: '2022-06-27'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(survival)
+```
+
+# Asignación
+
+* **Asumir los datos como un ciltivo de palma**
+* Tiempo = time: Variable respuesta: Tiempo de supervivencia
+* Edad = Age: meses de plantación
+* Hibrido = Sex: hibrido 1, hibrido 2
+* Severidad = ph.ecog: severidad en la misma escala
+* N17 = meal.cal: Nitrogeno medido en la hoja 17
+* P17 = wt.loss: Fosforo medido en la hoja 17
+
+```{r}
+str(lung)
+```
+```{r}
+table(lung$inst)
+```
+```{r}
+lung.sur<-Surv(lung$time, lung$status)
+# lung.sur
+class(lung.sur)
+```
+```{r}
+lung.fit<-survfit(lung.sur~1)
+summary(lung.fit)
+```
+```{r}
+plot(lung.fit,xlab="Dias",ylab="Proporción de sujetos")
+abline(h = 0.5, col='red')
+abline(v = 310, col='red')
+abline(h = c(0.25, 0.75), col='blue')
+abline(v = c(170, 550), col='blue')
+```
+```{r}
+plot(lung.fit,xlab="Dias",ylab="Proporción de sujetos")
+abline(h = 0.5, col='red')
+abline(v = 310, col='red')
+points(c(310, 310), c(0.43, 0.57), pch =16, col='blue')
+points(c(280, 360), c(0.5, 0.5), pch =16, col='red')
+```
+```{r}
+lung.fit.strata<-survfit(lung.sur~ph.ecog,lung)
+plot(lung.fit.strata, lty = 1:4,col=1:4,xlab="Days",ylab="Proportion of subjects",
+     lwd=3)
+legend(700, .9, c("ph.karno=0", "ph.karno=1","ph.karno=2","ph.karno=3"), lty = 1:4,col=1:4, lwd=3)
+abline(h = 0.5)
+```
+```{r}
+lung.fit.strata<-survfit(lung.sur~sex,lung)
+
+plot(lung.fit.strata, conf.int = 0.95,
+     col=1:2, xlab = 'dias', lwd=1)
+legend(700, .9, c("Male", "Female"), col=1:2, lwd=3)
+# abline(v = 400)
+abline(h = 0.25, col = 'maroon2', lwd=2)
+abline(h = 0.5, col = 'maroon2')
+abline(v = c(210, 320), col = 1)
+abline(v = c(350, 550), col = 2)
+```
+
+## Intervalos de Confianza para el estimador Kaplan-Meier
+
+```{r}
+# install.packages("km.ci")
+library(km.ci)
+a<-km.ci(lung.fit, conf.level=0.95, tl=NA, tu=NA, method="loghall")
+# plot(a, lty=2, lwd=2, col = c('red', 'black', 'black'))
+plot(a, lty=2, lwd=2, col = 'red')
+lines(lung.fit, lwd=2, lty=1, col = 'black')
+lines(lung.fit, lwd=1, lty=4, conf.int=T, col = 'blue')
+linetype<-c(1, 2, 4)
+legend(600, .9, c("Kaplan-Meier", "Hall-Wellner", "Pointwise"),
+       lty = linetype,
+       col = c('red', 'black', 'blue'))
+
+abline(h = 0.5, col='maroon3', lwd=2)
+abline(v = 310, col='maroon3', lwd=2)
+```
+
+```{r}
+aalen.fit<- survfit(coxph(lung.sur~1), type="aalen")
+sum_aalen.fit = summary(aalen.fit)
+
+plot(aalen.fit, col="red",lwd=1,lty=1)
+lines(lung.fit, lwd=1, lty=1)
+legend(600, .9,
+       c("Nelson-Aalen", "Kaplan-Meier"),
+       lty=c(1,1),
+       col=c("red", "black"))
+```
+
+```{r}
+barplot(sum_aalen.fit$time, cumsum(sum_aalen.fit$n.event))
+```
+
+```{r}
+mod_suv = lm(cumsum(sum_aalen.fit$n.event) ~ sum_aalen.fit$time)
+summary(mod_suv)
+
+plot(sum_aalen.fit$time, cumsum(sum_aalen.fit$n.event), pch = 16)
+abline(mod_suv)
+```
+
+```{r}
+survdiff(lung.sur~ph.ecog,lung)
+
+# Prueba de log-rank or Mantel-Haenszel
+survdiff(lung.sur~sex,lung, rho = 0)
+# Preuba de Peto & Peto modification of the Gehan-Wilcoxon test
+survdiff(lung.sur~sex,lung, rho = 1)
+
+
+survdiff(lung.sur~sex + ph.ecog,lung)
+```
+
+
+### Modelo Parametrico
+
+```{r}
+par.wei<-survreg(lung.sur~1,dist="w")
+par.wei
+```
+
+```{r}
+kappa<-par.wei$scale
+lambda<-exp(-par.wei$coeff[1])
+zeit<-seq(from=0,to=1100,length.out=1000)
+s<-exp(-(lambda*zeit)^kappa)
+h<-lambda^kappa *kappa*zeit^(kappa-1)
+par(mfrow=c(2,1))
+plot(zeit,h,xlab="Days",ylab="h(t)", pch = 16, cex = 0.1, las = 1)
+plot(zeit,s,xlab="Days",ylab="s(t)", pch = 16, cex = 0.1, las = 1)
+```
+
+
+
+
+
+
+
+
