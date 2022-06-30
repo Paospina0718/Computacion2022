@@ -2,11 +2,18 @@
 title: "Taller 7-computacion"
 author: "Paola Andrea Ospina Sanchez"
 date: "5/6/2022"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(ResourceSelection)
+library(Deducer)
+library(lattice)
 ```
 
 ```{r}
@@ -77,11 +84,119 @@ Model2: dfa.abortos ~ dfa.Edad+dfa.dap+dfa.rto+dfa.clolA
 ```{r}
 anova(model1,model2,test="Chisq")
 ```
-```{r}
-par(mfrow = c(2,3))
-scatter.smooth(dfa$Edad, log(pr/(1-pr)), cex = 0.5) 
-scatter.smooth(dfa$dap, log(pr/(1-pr)), cex = 0.5)
-scatter.smooth(dfa$clolA, log(pr/(1-pr)), cex = 0.5)
+# Delta beta
+
+```{r, warning = FALSE, message=FALSE}
+delta.coef <- abs((coef(model2)-coef(model1)[-c(4)])/coef(model1)[-c(4)])
+round(delta.coef, 3)
 ```
+
+```{r}
+model3 <- glm(dfa.abortos ~ dfa.Edad + dfa.dap + dfa.clolA, family = binomial, data = df1) # Elimiando la variable con el pvalue más alto
+summary(model3)
+```
+
+```{r, warning = FALSE, message=FALSE}
+delta.coef <- abs((coef(model3)-coef(model2)[-c(4)])/coef(model2)[-c(4)])
+round(delta.coef, 3) # Este es el modelo que escogemos
+```
+```{r}
+model_final <- glm(dfa.abortos ~ dfa.Edad + dfa.dap + dfa.clolA, family = binomial, data = df1) # Elimiando la variable con el pvalue más alto
+summary(model_final)
+```
+
+$$ln(\frac{p}{1-p}) = -80.1 - 0.4E - 0.13D + 0.35 C$$
+
+```{r}
+edades <- cut(dfa$Edad, breaks = 5)
+tabla <- table(edades, abortos)
+prop.table(tabla)
+```
+
+```{r}
+#hist(model_final$fitted.values * 100)
+length(dfa$Edad)
+probabilidades <- model_final$fitted.values
+prob <- ifelse(probabilidades < 0.5, 1, 0)
+table(prob, abortos)
+media_e <- mean(dfa$Edad)
+colores <- ifelse(dfa$Edad < media_e, 'blue', 'green')
+plot(model_final$fitted.values, cex = (data$edad * 0.015), pch = 19, col = colores)
+abline(h = 0.5, cex = 1.2, col = 'red')
+```
+
+```{r}
+media_d <- mean(dfa$dap)
+colores_d <- ifelse(dfa$dap < media_d, 'blue', 'green')
+plot(model_final$fitted.values, cex = (dfa$dap * 0.015), pch = 19, col = colores_d)
+abline(h = 0.5, cex = 1.2, col = 'red')
+```
+
+```{r}
+media_c <- mean(dfa$clolA)
+colores_c <- ifelse(dfa$clolA < media_c, 'blue', 'green')
+plot(model_final$fitted.values, cex = (dfa$clolA * 0.003), pch = 19, col = colores_c)
+abline(h = 0.5, cex = 1.2, col = 'red')
+```
+
+## Estudiando las interacciones del modelo
+
+```{r}
+model_inter1 <- glm(dfa.abortos ~ dfa.Edad + dfa.dap + dfa.clolA + dfa.Edad:dfa.dap, family = binomial, data = df1)
+summary(model_inter1)
+```
+
+```{r}
+df1 <- df1 |>
+  mutate(edad_c = ifelse(dfa.Edad > mean(dfa.Edad), 'mayor', 'menor'), 
+         dap_c = ifelse(dfa.dap < mean(dfa.dap), 'angosto','ancho'),
+         clolA_c = ifelse(dfa.clolA < mean(dfa.clolA), 'baja', 'alta'))
+print('edad abortos')
+edad_abortos <- table(dfa$edad_c, df1$abortos); edad_abortos
+print('dap abortos')
+dap_abortos <- table(dfa$dap_c, df1$abortos);dap_abortos
+print('cloA abortos')
+cloa_abortos <- table(dfa$clolA_c, df1$abortos);cloa_abortos
+```
+```{r}
+newdata<-data.frame(dfa.dap=rep(seq(from=4,to
+=15),length.out=100,4),dfa.clolA=mean(dfa$clolA),dfa.Edad=rep
+(c(20,40,60,80),100))
+newdata1 <- cbind(newdata, predict(model_inter1,
+newdata = newdata, type = "link",se = TRUE))
+newdata1 <- within(newdata1, {
+Edad<-factor(dfa$Edad)
+PredictedProb <- plogis(fit)
+LL <- plogis(fit - (1.96 * se.fit))
+UL <- plogis(fit + (1.96 * se.fit))
+})
+```
+
+```{r}
+ggplot(newdata1,
+aes(x = dfa.dap, y = PredictedProb)) + 
+  geom_ribbon(aes(ymin = LL,
+ymax = UL, fill = dfa.Edad), alpha = 0.2) + 
+  geom_line(aes(colour = dfa.Edad),
+size = 1)
+```
+```{r}
+hoslem.test(model2$y, fitted(model2))
+```
+```{r}
+Predprob<-predict(model2,type="response")
+plot(Predprob,jitter(as.numeric(dfa$abortos),0.5),cex=0.5,ylab="Jittered mortality outcome")
+rocplot(model2)
+```
+```{r}
+dfa$abortos <- as.logical(ifelse(w > 140, 'Si_aborto', 'No aborto'))
+class(dfa$abortos)
+histogram(Predprob|dfa$abortos)
+```
+
+
+
+
+
 
 
